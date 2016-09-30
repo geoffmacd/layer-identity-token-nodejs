@@ -27,9 +27,13 @@ if (!privateKey) {
 app.post('/authenticate', function(req, res) {
   var userId = req.body.user_id;
   var nonce = req.body.nonce;
+  var avatar = req.body.avatar;
+  var username = req.body.username;
   
   if (!userId) return res.status(400).send('Missing `user_id` body parameter.');
   if (!nonce) return res.status(400).send('Missing `nonce` body parameter.');
+  if (!avatar) return res.status(400).send('Missing `avatar` body parameter.');
+  if (!username) return res.status(400).send('Missing `username` body parameter.');
   
   if (!layerProviderID) return res.status(500).send('Couldn\'t find LAYER_PROVIDER_ID');
   if (!layerKeyID) return res.status(500).send('Couldn\'t find LAYER_KEY_ID');
@@ -50,7 +54,9 @@ app.post('/authenticate', function(req, res) {
     prn: userId,                // User Identifier
     iat: currentTimeInSeconds,  // Integer Time of Token Issuance 
     exp: expirationTime,        // Integer Arbitrary time of Token Expiration
-    nce: nonce                  // Nonce obtained from the Layer Client SDK
+    nce: nonce,                  // Nonce obtained from the Layer Client SDK
+    avatar_url: avatar,
+    display_name: username
   });
 
   var jws = null;
